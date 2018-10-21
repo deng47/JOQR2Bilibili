@@ -38,7 +38,6 @@ class Bilibili:
             },
             headers = self.session.headers)
         print(response.text)
-        print(response.request.headers)
 
 
 
