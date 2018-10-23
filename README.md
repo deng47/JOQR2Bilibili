@@ -18,3 +18,5 @@ cookie 当然不会上传到github了
 [deng47@myhost JOQR2Bilibili]$ ./upload_sub.py
 
 {"code":79013,"message":"字幕时间不合法","ttl":1}
+
+貌似因为b站字幕不支持时间重叠，正在想办法解决
