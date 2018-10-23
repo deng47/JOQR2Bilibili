@@ -17,15 +17,15 @@ class Bilibili:
         self.session.headers['Origin'] = 'https://account.bilibili.com'
 
     def upload_sub(self, aid, json_data):
-        #json_data = json.loads(json_data)
-
+        print(type(json_data))
+        print(json_data)
         form_data={
         'data':json_data,
         'aid':aid,
         'csrf':self.csrf,
         'submit':'true',
         'sign':'false',
-        'lan':'en',
+        'lan':'ko',
         'oid':'59646760',
         'type':'1'}
         response = self.session.post(self.link, 
@@ -36,7 +36,7 @@ class Bilibili:
 
 
 
-aid = '34005386' # https://www.bilibili.com/video/av34005386/
+aid = '34055284' # https://www.bilibili.com/video/av34055284/
 working_dir = '/project/radio'
 
 with open('%s/cookie' % working_dir) as f:
@@ -44,8 +44,8 @@ with open('%s/cookie' % working_dir) as f:
 
 with open('%s/json' % working_dir) as f:
     lines = f.readlines()
-    json_data = lines[0] + ','.join(lines[1:-1]) + lines[-1]
-    json_data = json_data.replace('\n','')
+    sub_data = lines[0] + ','.join(lines[1:-1]) + lines[-1]
+    json_data = sub_data.replace('\n','')
 
 b = Bilibili(cookie)
 b.upload_sub(aid, json_data)
