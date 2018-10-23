@@ -17,5 +17,4 @@ cookie 当然不会上传到github了
 
 [deng47@myhost JOQR2Bilibili]$ ./upload_sub.py
 
-{"code":-400,"message":"请求错误","ttl":1}
-
+{"code":79013,"message":"字幕时间不合法","ttl":1}
