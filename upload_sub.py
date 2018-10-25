@@ -3,6 +3,19 @@
 import requests
 import re
 import json
+import argparse
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description = "A command line tool upload sub file to Bilibili")
+    parser.add_argument(
+        "--sub", required = True)
+    parser.add_argument(
+        "--aid", required = True)
+    parser.add_argument(
+        "--cid", required = True)
+    return parser.parse_args()
 
 class Bilibili:
     def __init__(self, cookie):
@@ -15,18 +28,17 @@ class Bilibili:
         self.session.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         self.session.headers['Referer'] = 'https://account.bilibili.com/subtitle/edit/'
         self.session.headers['Origin'] = 'https://account.bilibili.com'
+        self.session.headers['Host'] = 'api.bilibili.com'
 
-    def upload_sub(self, aid, json_data):
-        print(type(json_data))
-        print(json_data)
+    def upload_sub(self, aid, cid, json_data):
         form_data={
         'data':json_data,
         'aid':aid,
         'csrf':self.csrf,
         'submit':'true',
-        'sign':'false',
-        'lan':'ko',
-        'oid':'59646760',
+        'sign':'true',
+        'lan':'ja',
+        'oid':cid,
         'type':'1'}
         response = self.session.post(self.link, 
             headers = self.session.headers,
@@ -35,18 +47,22 @@ class Bilibili:
         print(response.text)
 
 
+def main():
+    working_dir = '/project/radio'
+    args = parse_args()
+    aid = args.aid
+    cid = args.cid
+    sub = args.sub
 
-aid = '34055284' # https://www.bilibili.com/video/av34055284/
-working_dir = '/project/radio'
+    with open('%s/cookie' % working_dir) as f:
+        cookie = f.read()[:-1]
+    with open(sub) as f:
+        lines = f.readlines()
+        sub_data = lines[0] + ','.join(lines[1:-1]) + lines[-1]
+        json_data = sub_data.replace('\n','')
 
-with open('%s/cookie' % working_dir) as f:
-    cookie = f.read()[:-1]
+    b = Bilibili(cookie)
+    b.upload_sub(aid, cid, json_data)
 
-with open('%s/json' % working_dir) as f:
-    lines = f.readlines()
-    sub_data = lines[0] + ','.join(lines[1:-1]) + lines[-1]
-    json_data = sub_data.replace('\n','')
-
-b = Bilibili(cookie)
-b.upload_sub(aid, json_data)
-
+if __name__ == '__main__':
+    main()
